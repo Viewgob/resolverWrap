@@ -1,0 +1,82 @@
+# 4. Include/Link everything
+set(PLUGIN_NAME URIResolver)
+
+
+set(
+	SRC
+		resolver.cpp
+        resolver.h
+)
+
+add_library(${PLUGIN_NAME}
+    SHARED
+		${SRC}
+)
+
+find_package (Python2 COMPONENTS Interpreter Development)
+find_package( Boost 1.66.0 )
+
+target_link_libraries(${PLUGIN_NAME}
+    PUBLIC
+     ${PXR_LIBRARIES}
+      ${Boost_LIBRARIES}
+)
+
+target_include_directories(
+	${PLUGIN_NAME}
+    PUBLIC
+    ${Boost_INCLUDE_DIRS}
+    ${PXR_INCLUDE_DIRS}
+)
+
+install(
+    TARGETS ${PLUGIN_NAME}
+	RUNTIME DESTINATION bin
+    LIBRARY DESTINATION bin
+    ARCHIVE DESTINATION bin
+)
+
+install(
+    FILES
+		plugInfo.json
+    DESTINATION
+        ./resources
+)
+
+set (PYTHON_LIBRARY_NAME "_${PLUGIN_NAME}")
+message(STATUS "Creating python lib ${PYTHON_LIBRARY_NAME}")
+
+add_library ( ${PYTHON_LIBRARY_NAME}
+SHARED
+    module.cpp
+    moduleDeps.cpp
+    wrapURIResolver.cpp
+)
+
+target_compile_definitions(${PYTHON_LIBRARY_NAME}
+  PRIVATE
+    MFB_PACKAGE_NAME=${PLUGIN_NAME}
+    MFB_ALT_PACKAGE_NAME=${PLUGIN_NAME}
+)
+
+
+target_include_directories(
+	${PYTHON_LIBRARY_NAME}
+    PUBLIC
+    ${Boost_INCLUDE_DIRS}
+    ${PXR_INCLUDE_DIRS}
+)
+
+target_link_libraries(${PYTHON_LIBRARY_NAME}
+    ${PLUGIN_NAME}
+)
+set_target_properties(${PYTHON_LIBRARY_NAME} PROPERTIES SUFFIX ".pyd")
+
+install(
+    TARGETS ${PYTHON_LIBRARY_NAME}
+    RUNTIME DESTINATION python/${PLUGIN_NAME}
+)
+install(
+    FILES __init__.py
+    DESTINATION python/${PLUGIN_NAME}
+)

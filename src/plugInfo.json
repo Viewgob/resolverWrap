@@ -1,0 +1,16 @@
+{
+    "Plugins": [
+        {
+            "Info": {
+                "Types": {
+                    "URIResolver" : {
+                        "bases": ["ArResolver"]
+                    }
+                }
+            },
+            "LibraryPath": "../bin/URIResolver.dll",
+            "Name": "URIResolver",
+            "Type": "library"
+        }
+    ]
+}

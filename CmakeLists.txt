@@ -1,0 +1,8 @@
+project(simple_resolver)
+cmake_minimum_required(VERSION 3.12)
+set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
+set (PXR_CONFIG_CMAKE "G:/code/usd2108/pxrConfig.cmake")
+include (${PXR_CONFIG_CMAKE})
+set(CMAKE_INSTALL_PREFIX "./install")
+
+add_subdirectory(src)
